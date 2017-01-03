@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
+    <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/small_row_height"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                app:cardCornerRadius="1dp"
+                app:cardElevation="1dp">
+
+
+                <android.support.v7.widget.SwitchCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:checked="true"
+                    android:enabled="false"
+                    android:padding="@dimen/card_inside_padding"
+                    android:text="@string/accept_privacy_policy"
+                    android:textColor="#888888"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                app:cardCornerRadius="1dp"
+                app:cardElevation="1dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_inside_padding">
+
+
+                    <TextView
+                        style="@style/TitleTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/sort_news_by" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/card_inside_padding"
+                        android:layout_marginTop="@dimen/card_inside_padding"
+                        android:alpha=".4"
+                        android:background="#131313" />
+
+
+                    <Spinner
+                        android:id="@+id/spinnerViews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:minHeight="30dp"
+                        android:entries="@array/randomList"/>
+
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:minHeight="@dimen/small_row_height"
+                app:cardCornerRadius="1dp"
+                app:cardElevation="1dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_inside_padding">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/airverge_is_simple_and_free_news_fetching_app_built_for_android"
+                        android:textColor="#444444"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/card_inside_padding"
+                        android:layout_marginTop="@dimen/card_inside_padding"
+                        android:alpha=".4"
+                        android:background="#131313" />
+
+
+                    <TextView
+                        android:id="@+id/mailLink"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autoLink="all"
+                        android:text="@string/mail_developer"
+                        android:textColor="#444444"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/githubLink"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/five_dp_margin"
+                        android:autoLink="all"
+                        android:text="@string/github"
+                        android:textColor="#444444"
+                        android:textSize="15sp" />
+
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:minHeight="@dimen/small_row_height"
+                app:cardCornerRadius="1dp"
+                app:cardElevation="1dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_inside_padding">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/support_development_of_airverge_for_android_paypal_airverge"
+                        android:textColor="#444444"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/card_inside_padding"
+                        android:layout_marginTop="@dimen/card_inside_padding"
+                        android:alpha=".4"
+                        android:background="#131313" />
+
+
+                    <TextView
+                        android:id="@+id/coffeeLink"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autoLink="all"
+                        android:text="@string/buy_coffee"
+                        android:textColor="#444444"
+                        android:textSize="15sp" />
+
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:minHeight="@dimen/small_row_height"
+                app:cardCornerRadius="1dp"
+                app:cardElevation="1dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_inside_padding">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/airverge_logo"
+                            android:scaleType="centerCrop"
+                            android:background="@android:color/black"
+                            android:src="@drawable/app_icon_small" />
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="@dimen/five_dp_margin"
+                            android:layout_marginStart="@dimen/five_dp_margin"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="@string/app_name"
+                                android:textColor="#444444"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="@string/app_version"
+                                android:textColor="#444444"
+                                android:textSize="12sp" />
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/five_dp_margin"
+                        android:text="@string/powered_by_news_api"
+                        android:textColor="#444444"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

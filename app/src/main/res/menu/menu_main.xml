@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.airstem.airflow.ayush.airflow.MainActivity" >
+
+    <item android:id="@+id/starAction"
+        android:title="@string/star_this_news"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_starred"
+        app:showAsAction="always" />
+
+</menu>
