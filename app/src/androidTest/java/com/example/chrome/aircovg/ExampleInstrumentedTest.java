@@ -1,4 +1,4 @@
-package com.example.chrome.aircovg;
+package com.air.aircovg;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.chrome.aircovg", appContext.getPackageName());
+        assertEquals("com.air.aircovg", appContext.getPackageName());
     }
 }

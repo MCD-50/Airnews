@@ -20,6 +20,7 @@
     <string name="sort_news_by">Sort News By</string>
     <string name="refresh_now">Refresh now</string>
     <string name="star_this_news">Star this news</string>
+    <string name="its_empty_in_here_star_few_news_to_get_started">Its empty in here, star few news to get started.</string>
 
     <string-array name="randomList">
         <item>Top</item>

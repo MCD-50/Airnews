@@ -1,4 +1,4 @@
-package com.example.chrome.aircovg;
+package com.air.aircovg;
 
 import org.junit.Test;
 
