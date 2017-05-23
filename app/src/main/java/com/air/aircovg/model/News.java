@@ -12,48 +12,23 @@ import java.io.Serializable;
 public class News implements Serializable {
 
 
-    private String mAuthor;
-    private String mTitle;
-    private String mDescription;
-    private String mUrl;
-    private String mImageUrl;
-    private String mPublishedAt;
-    private String mSource;
-    private int mId;
-    private Bitmap mLocalImage;
 
-    public News(String mAuthor, String mTitle, String mDescription, String mUrl, String mPublishedAt,String mSource) {
-        this.mAuthor = mAuthor;
+    private String mTitle;
+    private String mUrl;
+    private String mPublishedAt;
+    private String mDescription;
+    private String mImageUrl;
+    private Bitmap mImage;
+
+    public News(String mTitle, String mDescription, String mUrl, String mPublishedAt) {
         this.mTitle = mTitle;
         this.mDescription = mDescription;
         this.mUrl = mUrl;
         this.mPublishedAt = mPublishedAt;
-        this.mSource = mSource;
-    }
-
-
-    public int getmId(){
-        return mId;
-    }
-
-    public void setmId(int mId){
-        this.mId = mId;
-    }
-
-    public String getmAuthor() {
-        return mAuthor;
-    }
-
-    public void setmAuthor(String mAuthor) {
-        this.mAuthor = mAuthor;
     }
 
     public String getmTitle() {
         return mTitle;
-    }
-
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
     }
 
     public String getmDescription() {
@@ -64,20 +39,24 @@ public class News implements Serializable {
         this.mDescription = mDescription;
     }
 
+    public Bitmap getmImage() {
+        return mImage;
+    }
+
+    public void setmImage(Bitmap mImage) {
+        this.mImage = mImage;
+    }
+
+    public void setmTitle(String mTitle) {
+        this.mTitle = mTitle;
+    }
+
     public String getmUrl() {
         return mUrl;
     }
 
     public void setmUrl(String mUrl) {
         this.mUrl = mUrl;
-    }
-
-    public String getmImageUrl() {
-        return mImageUrl;
-    }
-
-    public void setmImageUrl(String mImageUrl) {
-        this.mImageUrl = mImageUrl;
     }
 
     public String getmPublishedAt() {
@@ -88,20 +67,22 @@ public class News implements Serializable {
         this.mPublishedAt = mPublishedAt;
     }
 
+
+    public String getmImageUrl() {
+        return mImageUrl;
+    }
+
+    public void setmImageUrl(String mImageUrl) {
+        this.mImageUrl = mImageUrl;
+    }
+
+
     public Bitmap getmLocalImage() {
-        return mLocalImage;
+        return mImage;
     }
 
     public void setmLocalImage(Bitmap mLocalImage) {
-        this.mLocalImage = mLocalImage;
+        this.mImage = mLocalImage;
     }
 
-
-    public String getmSource() {
-        return mSource;
-    }
-
-    public void setmSource(String mSource) {
-        this.mSource = mSource;
-    }
 }

@@ -23,6 +23,12 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
+
+
+    //versionName = getBaseContext().getPackageManager().getPackageInfo(getBaseContext().getPackageName(), 0 ).versionName;
+    //versionCode = getBaseContext().getPackageManager().getPackageInfo(getBaseContext().getPackageName(), 0 ).versionCode;
+    //String myUserAgent = "Airnews"
+
     TabsPagerAdapter tabsPagerAdapter;
     ViewPager viewPager;
     NavigationView navigationView;
@@ -39,21 +45,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               /* Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-                try {
-                    Intent i = new Intent(Intent.ACTION_SEND);
-                    i.setType("text/plain");
-                    i.putExtra(Intent.EXTRA_SUBJECT, "Airverge");
-                    String sAux = "Discover Airverge for android.\n\n";
-                    sAux = sAux + "https://play.google.com/store/apps/details?id=com.air.aircovg&hl=en\n\n";
-                    sAux = sAux + "Source code at Github\n\n";
-                    sAux = sAux + "https://www.github.com/mcd-50";
-                    i.putExtra(Intent.EXTRA_TEXT, sAux);
-                    startActivity(Intent.createChooser(i, "Choose to share"));
-                } catch(Exception e) {
-                    //e.toString();
-                }
+                onFavClicked();
             }
         });
 
@@ -80,13 +72,12 @@ public class MainActivity extends AppCompatActivity
     public void showNews(News news, boolean isStarred) {
         Intent i = new Intent(MainActivity.this, DetailedNewsActivity.class);
         if(isStarred){
-            News s = new News(news.getmAuthor(), news.getmTitle(), news.getmDescription(), news.getmUrl(), news.getmPublishedAt(), news.getmSource());
+            News s = new News(news.getmTitle(), news.getmDescription(), news.getmUrl(), news.getmPublishedAt());
             s.setmImageUrl(news.getmImageUrl());
             i.putExtra("newsObject", s);
         }else {
             i.putExtra("newsObject", news);
         }
-
         startActivity(i);
     }
 
@@ -96,15 +87,20 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(R.id.nav_home);
     }
 
-    public void showSnackbar(){
-        Snackbar.make(coordinatorLayout, "You are not connected to internet. Please check your connection and try again in a little bit.", Snackbar.LENGTH_LONG).show();
-    }
-
-    public void toggleVisible(boolean isVisible) {
-//        if(isVisible)
-//            fab.setVisibility(View.VISIBLE);
-//        else
-//            fab.setVisibility(View.GONE);
+    public void onFavClicked(){
+        try {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, "Airverge");
+            String sAux = "Discover Airverge for android.\n\n";
+            sAux = sAux + "https://play.google.com/store/apps/details?id=com.air.aircovg&hl=en\n\n";
+            sAux = sAux + "Source code at Github\n\n";
+            sAux = sAux + "https://www.github.com/mcd-50";
+            i.putExtra(Intent.EXTRA_TEXT, sAux);
+            startActivity(Intent.createChooser(i, "Choose to share"));
+        } catch(Exception e) {
+            //e.toString();
+        }
     }
 
     @Override
@@ -129,25 +125,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_categories)
-            startActivity(new Intent(MainActivity.this, CategoriesActivity.class));
-        else if (id == R.id.nav_settings)
+        if (id == R.id.nav_settings)
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

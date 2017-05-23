@@ -31,22 +31,6 @@
 
         </activity>
 
-        <activity android:name=".CategoriesActivity"
-                  android:label="@string/categories"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme.NoActionBar">
-
-
-        </activity>
-        <activity android:name=".CategoriesNewsActivity"
-                  android:label="@string/news"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme.NoActionBar">
-
-
-
-        </activity>
-
         <activity android:name=".SettingsActivity"
                   android:label="@string/settings"
                   android:screenOrientation="portrait"

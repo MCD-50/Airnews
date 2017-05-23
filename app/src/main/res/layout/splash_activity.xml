@@ -3,15 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <!--<ImageView xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:adjustViewBounds="true"-->
-        <!--android:scaleType="centerCrop"-->
-        <!--android:src="@drawable/splash_image" />-->
-
-    <View android:layout_width="match_parent"
+    <View
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/black" />
 
@@ -26,14 +19,13 @@
         <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="100dp"
-            android:minWidth="100dp"
-            android:maxHeight="150dp"
-            android:maxWidth="150dp"
             android:adjustViewBounds="true"
+            android:maxHeight="120dp"
+            android:maxWidth="120dp"
+            android:minHeight="120dp"
+            android:minWidth="120dp"
             android:scaleType="centerCrop"
             android:src="@drawable/app_icon_big" />
-
 
     </LinearLayout>
 

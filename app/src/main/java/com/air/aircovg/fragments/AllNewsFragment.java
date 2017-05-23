@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,21 +15,16 @@ import android.widget.TextView;
 
 import com.air.aircovg.MainActivity;
 import com.air.aircovg.R;
-import com.air.aircovg.adapters.AllNewsAdapter;
-import com.air.aircovg.helpers.AppConstants;
-import com.air.aircovg.helpers.CategoriesHelper;
-import com.air.aircovg.helpers.ChannelsHelper;
+import com.air.aircovg.adapters.NewsAdapter;
+import com.air.aircovg.helpers.RssHelper;
 import com.air.aircovg.helpers.InternetHelper;
-import com.air.aircovg.helpers.JsonHelper;
 import com.air.aircovg.helpers.NetworkStatusHelper;
 import com.air.aircovg.helpers.SharedPreferenceHelper;
+import com.air.aircovg.helpers.StringHelpers;
 import com.air.aircovg.model.News;
+import com.air.aircovg.model.XmlObject;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
 
 /**
  * Created by ayush AS on 25/12/16.
@@ -39,129 +32,99 @@ import java.util.Random;
 
 public class AllNewsFragment extends Fragment {
 
-    ProgressDialog mProgressDialog;
-    ArrayList<News> mNews;
-    JsonHelper jsonHelper;
-    InternetHelper internetHelper;
-    ChannelsHelper channelsHelper;
-    AllNewsAdapter allNewsAdapter;
-    ListView mListView;
-    int currentPage = 0;
-    int channelLength = 0;
-    String[] channels;
-    SharedPreferenceHelper sharedPreferenceHelper;
     NetworkStatusHelper networkStatusHelper;
-    Button button;
-    TextView message;
+    InternetHelper internetHelper;
+
+    SharedPreferenceHelper sharedPreferenceHelper;
+    NewsAdapter newsAdapter;
+    ArrayList<News> mNews;
+
+    RssHelper rssHelper;
+
+    ProgressDialog mProgressDialog;
+
+    Button mButton;
+    TextView mTextView;
+    ListView mListView;
+
+    int currentPage = 0;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.all_news_layout, container, false);
 
-        mProgressDialog = new ProgressDialog(getContext());
-        jsonHelper = new JsonHelper();
-        channelsHelper = new ChannelsHelper();
-        internetHelper = new InternetHelper();
-
-        channels = channelsHelper.getAllChannels();
-        channelLength = channels.length;
         networkStatusHelper = new NetworkStatusHelper(getContext());
-        Collections.shuffle(Arrays.asList(channels));
+        internetHelper = new InternetHelper();
+        rssHelper = new RssHelper();
+        mProgressDialog = new ProgressDialog(getContext());
 
-
+        mTextView = (TextView) rootView.findViewById(R.id.emptyMessage);
+        mButton = (Button) rootView.findViewById(R.id.refreshNow);
         mListView = (ListView) rootView.findViewById(R.id.listView);
-        message = (TextView) rootView.findViewById(R.id.emptyMessage);
-        button = (Button) rootView.findViewById(R.id.refreshNow);
         mListView.setDividerHeight(0);
-
         return rootView;
     }
 
 
-
     private void setAdapter() {
         mNews = new ArrayList<>();
-        allNewsAdapter = new AllNewsAdapter(getContext(), mNews);
-        mListView.setAdapter(allNewsAdapter);
+        newsAdapter = new NewsAdapter(getContext(), mNews, false);
+        mListView.setAdapter(newsAdapter);
     }
 
     private void loadData(int count) {
-        new getNewsAsync(count).execute();
+        //we are not using paging
+        new getNewsAsync().execute();
     }
-
 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         sharedPreferenceHelper = new SharedPreferenceHelper(getActivity().getApplicationContext());
-
         setAdapter();
 
-
         if(networkStatusHelper.isNetworkAvailable()){
-            executeInner();
+            onNetworkAvailable();
         }else {
-            message.setVisibility(View.VISIBLE);
-            button.setVisibility(View.VISIBLE);
+            mTextView.setVisibility(View.VISIBLE);
+            mButton.setVisibility(View.VISIBLE);
         }
 
-        button.setOnClickListener(new View.OnClickListener() {
+        mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                executeOnNetworkAvailable();
+                onRefreshClick();
             }
         });
     }
 
 
-    private void executeOnNetworkAvailable(){
+    private void onRefreshClick(){
         if(networkStatusHelper.isNetworkAvailable()){
-            executeInner();
+            onNetworkAvailable();
         }else {
-            message.setVisibility(View.VISIBLE);
-            button.setVisibility(View.VISIBLE);
+            mTextView.setVisibility(View.VISIBLE);
+            mButton.setVisibility(View.VISIBLE);
         }
     }
 
 
-    private void executeInner(){
+    private void onNetworkAvailable(){
         loadData(currentPage);
-        message.setVisibility(View.GONE);
-        button.setVisibility(View.GONE);
+        mTextView.setVisibility(View.GONE);
+        mButton.setVisibility(View.GONE);
+        loadData(0);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((MainActivity)getActivity()).showNews(allNewsAdapter.getItem(position), false);
-            }
-        });
-
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                int threshold = 1;
-                int itemCount = mListView.getCount();
-                if (scrollState == SCROLL_STATE_IDLE) {
-                    if (mListView.getLastVisiblePosition() >= itemCount - threshold && currentPage < channelLength - 1) {
-                        // Execute LoadMoreDataTask AsyncTask
-                        loadData(currentPage);
-                    }
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+                ((MainActivity)getActivity()).showNews(newsAdapter.getItem(position), false);
             }
         });
     }
 
     public class getNewsAsync extends AsyncTask<Void, Void, ArrayList<News>> {
-
-        String[] channelList;
-        public getNewsAsync(int count){
-            channelList = new String[] {channels[count], channels[count + 1]};
-        }
 
         @Override
         protected void onPreExecute() {
@@ -173,40 +136,25 @@ public class AllNewsFragment extends Fragment {
 
         @Override
         protected ArrayList<News> doInBackground(Void... params) {
-            ArrayList<News> allNewses = new ArrayList<News>();
-
-            try {
-                  for(String channel : channelList){
-                     for(News n : jsonHelper.getAllNews(internetHelper.getJsonString(channel, sharedPreferenceHelper.getData()))){
-                          allNewses.add(n);
-                      }
-                  }
-            }catch (Exception file){
-                try{
-                    allNewses.clear();
-                    for(String channel : channelList){
-                        for(News n : jsonHelper.getAllNews(internetHelper.getJsonString(channel, "top"))){
-                            allNewses.add(n);
-                        }
-                    }
-                }catch (Exception any){
-                  any.printStackTrace();
-                }
-
+            ArrayList<News> newsList= new ArrayList<>();
+            try{
+                String ned = sharedPreferenceHelper.getData("ned");
+                String q = StringHelpers.getFullNewsUrl(ned, "education");
+                newsList = rssHelper.fetchXML(q);
+            }catch (Exception e){
+                e.printStackTrace();
             }
-
-            return allNewses;
+            return newsList;
         }
 
         @Override
         protected void onPostExecute(ArrayList<News> newsArrayList) {
             mProgressDialog.dismiss();
-
             if (newsArrayList.size() > 0) {
                 for(News x : newsArrayList)
                     mNews.add(x);
-                currentPage += 2;
-                allNewsAdapter.notifyDataSetChanged();
+                //currentPage += 2;
+                newsAdapter.notifyDataSetChanged();
             }
 
         }

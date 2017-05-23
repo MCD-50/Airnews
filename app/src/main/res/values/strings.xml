@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Airverge</string>
+    <string name="app_name">Airnews</string>
     <string name="app_version">1.0.0</string>
     <string name="airverge_logo">Airverge logo</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -13,19 +13,19 @@
     <string name="accept_privacy_policy">Accept Privacy Policy</string>
     <string name="support_development_of_airverge_for_android_paypal_airverge">Support development of airverge for android. PayPal airverge</string>
     <string name="powered_by_news_api">Powered by News.Api</string>
-    <string name="airverge_is_simple_and_free_news_fetching_app_built_for_android">Airverge is simple and free news fetching app built for android.</string>
+    <string name="airnews_is_simple_and_free_news_fetching_app_built_for_android">Airnews is simple and free news fetching app built for android.</string>
     <string name="buy_coffee"><a href='https://www.paypal.me/AyushAS'>Buy coffee for developer</a></string>
     <string name="mail_developer"><a href='mailto:ayush.as.shukla@gmail.com'>Contact developer</a></string>
     <string name="github"><a href='https://www.github.com/MCD-50/Airverge'>Source code at github</a></string>
-    <string name="sort_news_by">Sort News By</string>
+    <string name="select_country">Select Country</string>
     <string name="refresh_now">Refresh now</string>
     <string name="star_this_news">Star this news</string>
     <string name="its_empty_in_here_star_few_news_to_get_started">Its empty in here, star few news to get started.</string>
 
-    <string-array name="randomList">
-        <item>Top</item>
-        <item>Latest</item>
-        <item>Popular</item>
-    </string-array>
+    <!--<string-array name="randomList">-->
+        <!--<item>Top</item>-->
+        <!--<item>Latest</item>-->
+        <!--<item>Popular</item>-->
+    <!--</string-array>-->
 
 </resources>

@@ -4,9 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin">
+    android:orientation="vertical">
 
 
 
@@ -21,82 +19,38 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/card_inside_padding"
-            android:paddingBottom="@dimen/card_inside_padding"
-            android:orientation="vertical">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingStart="@dimen/card_inside_padding"
-                android:paddingEnd="@dimen/card_inside_padding">
-
-                <ImageView
-                    android:id="@+id/news_content_smallImage"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:scaleType="centerCrop"
-                    android:adjustViewBounds="true"
-                    />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/five_dp_margin"
-                    android:layout_marginEnd="@dimen/five_dp_margin">
-
-                    <TextView
-                        android:id="@+id/news_content_author"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minLines="1"
-                        android:maxLines="1"
-                        style="@style/AuthorTextView"/>
-
-                    <TextView
-                        android:id="@+id/news_content_published_at"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/DateTextView"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/news_content_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/card_inside_padding"
-                android:layout_marginBottom="@dimen/card_inside_padding"
-                style="@style/DescriptionTextView"
-                android:maxLines="5"
-                android:minLines="1"
-                android:paddingStart="@dimen/card_inside_padding"
-                android:paddingEnd="@dimen/card_inside_padding"/>
-
-            <ImageView
-                android:id="@+id/news_content_image"
-                android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:layout_marginBottom="@dimen/card_inside_padding"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:layout_marginStart="@dimen/card_inside_padding"
-                android:layout_marginEnd="@dimen/card_inside_padding" />
+            android:orientation="vertical"
+            android:padding="@dimen/card_inside_padding">
 
             <TextView
                 android:id="@+id/news_content_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/TitleTextView"
-                android:paddingStart="@dimen/card_inside_padding"
-                android:paddingEnd="@dimen/card_inside_padding"/>
+                android:minLines="1"
+                android:maxLines="3"
+                style="@style/TitleTextView"/>
+
+            <ImageView
+                android:id="@+id/news_content_image"
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                android:layout_marginTop="@dimen/five_dp_margin"
+                android:layout_marginBottom="@dimen/five_dp_margin"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true" />
+
+            <TextView
+                android:id="@+id/news_content_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/five_dp_margin"
+                style="@style/DescriptionTextView"/>
+
+            <TextView
+                android:id="@+id/news_content_published_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/DateTextView"/>
 
         </LinearLayout>
 

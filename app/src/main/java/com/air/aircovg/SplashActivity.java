@@ -10,21 +10,17 @@ import android.os.Handler;
  */
 
 public class SplashActivity extends Activity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent nIntent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(nIntent);
-
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 finish();
             }
-        }, 2000);
+        }, 1500);
 
     }
 }

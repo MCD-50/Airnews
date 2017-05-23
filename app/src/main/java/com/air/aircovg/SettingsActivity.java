@@ -13,9 +13,15 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.air.aircovg.adapters.SpinnerAdapter;
+import com.air.aircovg.helpers.AppConstants;
 import com.air.aircovg.helpers.SharedPreferenceHelper;
+import com.air.aircovg.helpers.StringHelpers;
+import com.air.aircovg.model.Country;
 
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 /**
  * Created by ayush AS on 30/12/16.
@@ -23,12 +29,13 @@ import org.w3c.dom.Text;
 
 public class SettingsActivity extends AppCompatActivity {
 
-
-    TextView contact, github, paypal;
     SharedPreferenceHelper sharedPreferenceHelper;
-    Spinner spinner;
+    SpinnerAdapter spinnerAdapter;
 
-    String[] array = new String[]{"top", "latest", "popular"};
+    TextView mContact, mGithub, mPaypal;
+    Spinner mSpinner;
+
+    ArrayList<String> countryName = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,21 +47,22 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sharedPreferenceHelper = new SharedPreferenceHelper(getApplicationContext());
+        spinnerAdapter = new SpinnerAdapter(this, AppConstants.COUNTRY_LIST);
 
+        mContact = (TextView) findViewById(R.id.mailLink);
+        mGithub = (TextView) findViewById(R.id.githubLink);
+        mPaypal = (TextView) findViewById(R.id.coffeeLink);
+        mSpinner = (Spinner) findViewById(R.id.spinnerViews);
 
+        mSpinner.setAdapter(spinnerAdapter);
+        mSpinner.setSelection(getIndex(sharedPreferenceHelper.getData("ned")));
 
-        contact = (TextView) findViewById(R.id.mailLink);
-        github = (TextView) findViewById(R.id.githubLink);
-        paypal = (TextView) findViewById(R.id.coffeeLink);
-        spinner = (Spinner) findViewById(R.id.spinnerViews);
-
-        spinner.setSelection(getIndex(sharedPreferenceHelper.getData()));
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sharedPreferenceHelper.saveData(array[position]);
-                spinner.setSelection(position);
+                Country country = (Country) parent.getItemAtPosition(position);
+                sharedPreferenceHelper.saveData("ned", country.getmCode());
+                mSpinner.setSelection(position);
             }
 
             @Override
@@ -63,12 +71,11 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        contact.setOnClickListener(new View.OnClickListener() {
+        mContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent sIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "ayush.as.shukla@gmail.com", null));
-                sIntent.putExtra(Intent.EXTRA_SUBJECT, "Airvege user");
-
+                sIntent.putExtra(Intent.EXTRA_SUBJECT, "Airnews user");
                 try{
                     startActivity(Intent.createChooser(sIntent, "Contact developer.."));
                 }catch (Exception e){
@@ -77,7 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        github.setOnClickListener(new View.OnClickListener() {
+        mGithub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent bIntent = new Intent(Intent.ACTION_VIEW);
@@ -86,7 +93,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        paypal.setOnClickListener(new View.OnClickListener() {
+        mPaypal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent bIntent = new Intent(Intent.ACTION_VIEW);
@@ -109,12 +116,13 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-    private int getIndex(String sort){
-        for(int i = 0; i < 3 ; i++ ){
-            if(array[i].equalsIgnoreCase(sort))
+    private int getIndex(String code){
+        ArrayList<Country> countries = AppConstants.COUNTRY_LIST;
+        for(int i = 0; i < countries.size(); i++){
+            Country country = countries.get(i);
+            if(country.getmCode().equalsIgnoreCase(code))
                 return i;
         }
-
         return 0;
     }
 }

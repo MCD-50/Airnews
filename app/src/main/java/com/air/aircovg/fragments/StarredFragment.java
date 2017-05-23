@@ -2,7 +2,6 @@ package com.air.aircovg.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +11,11 @@ import android.widget.TextView;
 
 import com.air.aircovg.MainActivity;
 import com.air.aircovg.R;
-import com.air.aircovg.adapters.StarredAdapter;
+import com.air.aircovg.adapters.NewsAdapter;
 import com.air.aircovg.events.DatabaseEvents;
 import com.air.aircovg.helpers.DatabaseHelper;
 import com.air.aircovg.helpers.EventHelper;
 import com.air.aircovg.model.News;
-import com.air.aircovg.scrapper.MtvNews;
 
 import java.util.ArrayList;
 
@@ -27,33 +25,35 @@ import java.util.ArrayList;
 
 public class StarredFragment extends Fragment implements DatabaseEvents {
 
-    StarredAdapter starredAdapter;
+    NewsAdapter newsAdapter;
     ArrayList<News> mNews;
     DatabaseHelper databaseHelper;
+
+    TextView mTextView;
     ListView mListView;
-    TextView message;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.starred_layout, container, false);
         EventHelper.initDatabaseEvent(this);
         mListView = (ListView) rootView.findViewById(R.id.listView);
+        mTextView = (TextView) rootView.findViewById(R.id.emptyMessage);
         mListView.setDividerHeight(0);
-        message = (TextView) rootView.findViewById(R.id.emptyMessage);
         return rootView;
     }
 
     public void loadAdapter(){
         mNews = new ArrayList<>();
-        starredAdapter = new StarredAdapter(getContext(),mNews);
-        mListView.setAdapter(starredAdapter);
+        newsAdapter = new NewsAdapter(getContext(), mNews, true);
+        mListView.setAdapter(newsAdapter);
         updateMessage();
     }
 
     private void updateMessage(){
         if(mNews.size() > 0)
-            message.setVisibility(View.GONE);
+            mTextView.setVisibility(View.GONE);
         else
-            message.setVisibility(View.VISIBLE);
+            mTextView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -61,14 +61,14 @@ public class StarredFragment extends Fragment implements DatabaseEvents {
         super.onActivityCreated(savedInstanceState);
         loadAdapter();
         databaseHelper = new DatabaseHelper(getContext());
+
         for(News n : databaseHelper.getAllNews()){
             mNews.add(n);
         }
-
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((MainActivity)getActivity()).showNews(starredAdapter.getItem(position), true);
+                ((MainActivity)getActivity()).showNews(newsAdapter.getItem(position), true);
             }
         });
     }
@@ -85,8 +85,7 @@ public class StarredFragment extends Fragment implements DatabaseEvents {
         }else {
             mNews.add(news);
         }
-        starredAdapter.notifyDataSetChanged();
+        newsAdapter.notifyDataSetChanged();
         updateMessage();
     }
-
 }

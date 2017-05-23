@@ -1,27 +1,25 @@
 package com.air.aircovg.model;
 
 /**
- * Created by ayush AS on 27/12/16.
+ * Created by ayush AS on 20/5/17.
  */
 
 public class Base {
 
-    private int mId;
-    private String mImageUrl;
     private String mUrl;
-
-    public Base(int mId, String mImageUrl, String mUrl) {
-        this.mId = mId;
-        this.mImageUrl = mImageUrl;
+    private String mImageUrl;
+    public Base(String mUrl, String mImageUrl) {
         this.mUrl = mUrl;
+        this.mImageUrl = mImageUrl;
     }
 
-    public int getmId() {
-        return mId;
+
+    public String getmUrl() {
+        return mUrl;
     }
 
-    public void setmId(int mId) {
-        this.mId = mId;
+    public void setmUrl(String mUrl) {
+        this.mUrl = mUrl;
     }
 
     public String getmImageUrl() {
@@ -31,12 +29,5 @@ public class Base {
     public void setmImageUrl(String mImageUrl) {
         this.mImageUrl = mImageUrl;
     }
-
-    public String getmUrl() {
-        return mUrl;
-    }
-
-    public void setmUrl(String mUrl) {
-        this.mUrl = mUrl;
-    }
 }
+

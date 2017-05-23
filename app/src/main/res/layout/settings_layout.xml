@@ -33,9 +33,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin">
+            android:orientation="vertical">
 
 
             <android.support.v7.widget.CardView
@@ -77,12 +75,11 @@
                     android:orientation="vertical"
                     android:padding="@dimen/card_inside_padding">
 
-
                     <TextView
                         style="@style/TitleTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="@string/sort_news_by" />
+                        android:text="@string/select_country" />
 
                     <View
                         android:layout_width="match_parent"
@@ -93,13 +90,20 @@
                         android:background="#131313" />
 
 
+                    <!--<Spinner-->
+                        <!--android:id="@+id/spinnerViews"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginBottom="10dp"-->
+                        <!--android:minHeight="30dp"-->
+                        <!--android:entries="@array/randomList"/>-->
+
                     <Spinner
                         android:id="@+id/spinnerViews"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:minHeight="30dp"
-                        android:entries="@array/randomList"/>
+                        android:minHeight="30dp" />
 
 
                 </LinearLayout>
@@ -127,7 +131,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="@string/airverge_is_simple_and_free_news_fetching_app_built_for_android"
+                        android:text="@string/airnews_is_simple_and_free_news_fetching_app_built_for_android"
                         android:textColor="#444444"
                         android:textSize="15sp" />
 
@@ -275,14 +279,6 @@
                         </LinearLayout>
 
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/five_dp_margin"
-                        android:text="@string/powered_by_news_api"
-                        android:textColor="#444444"
-                        android:textSize="15sp" />
 
                 </LinearLayout>
 

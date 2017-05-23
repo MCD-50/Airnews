@@ -9,22 +9,20 @@ import android.content.SharedPreferences;
 
 public class SharedPreferenceHelper {
 
-
     private SharedPreferences sharedPreferences;
     public SharedPreferenceHelper(Context context){
-        sharedPreferences = context.getSharedPreferences("sortBy", 0);
+        sharedPreferences = context.getSharedPreferences("ned", 0);
     }
 
     //we have single data to be stored..
-    public void saveData(String sortBy){
+    public void saveData(String key, String value){
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("sortBy", sortBy);
+        editor.putString(key, value);
         editor.apply();
     }
 
-
-    public String getData(){
-        return sharedPreferences.getString("sortBy", "top");
+    public String getData(String key){
+        return sharedPreferences.getString(key, "all");
     }
 
 }
