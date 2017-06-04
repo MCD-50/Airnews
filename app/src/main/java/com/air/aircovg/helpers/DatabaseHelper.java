@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.widget.Toast;
 
 import com.air.aircovg.R;
@@ -29,19 +30,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private ProgressDialog mProgressDialog;
     private Context mContext;
+    private static DatabaseHelper databaseHelper = null;
+
     public DatabaseHelper(Context context){
         super(context, AppConstants.DATABASE_NAME, null, AppConstants.DATABASE_VERSION);
         mContext = context;
+    }
+
+    public static DatabaseHelper getDatabaseHelper(Context context){
+        if(databaseHelper == null){
+            databaseHelper = new DatabaseHelper(context);
+        }
+        return databaseHelper;
     }
 
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_FAV_TRACK__TABLE = "CREATE TABLE " + AppConstants.TABLE_STARRED_NEWS + "("
-                + AppConstants.KEY_ID + " INTEGER PRIMARY KEY   AUTOINCREMENT," + AppConstants.KEY_TITLE + " TEXT,"
-                + AppConstants.KEY_DESCRIPTION + " TEXT," + AppConstants.KEY_URL + " TEXT," + AppConstants.KEY_PUBLISHED_AT + " TEXT,"
-                + AppConstants.KEY_IMAGE_URL + " TEXT," + AppConstants.KEY_IMAGE + " BLOB" + ")";
-
+                + AppConstants.KEY_ID + " INTEGER PRIMARY KEY   AUTOINCREMENT," + AppConstants.KEY_AUTHOR + " TEXT,"
+                + AppConstants.KEY_TITLE + " TEXT," + AppConstants.KEY_DESCRIPTION + " TEXT," + AppConstants.KEY_URL + " TEXT,"
+                + AppConstants.KEY_PUBLISHED_AT + " TEXT" + ")";
         db.execSQL(CREATE_FAV_TRACK__TABLE);
     }
 
@@ -53,7 +62,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-
     public void addNews(News news) {
         if(getNewsCount() > 50){
             CollectionHelper.showAlert(mContext, "Couldn't add news", "You can add only 50 news to your starred list. Try removing few of them and then add.");
@@ -62,13 +70,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             //insert only once.
             if(!isNewsExists(news.getmUrl())){
                 ContentValues values = new ContentValues();
+                values.put(AppConstants.KEY_AUTHOR, news.getmAuthor());
                 values.put(AppConstants.KEY_TITLE, news.getmTitle());
                 values.put(AppConstants.KEY_DESCRIPTION, news.getmDescription());
                 values.put(AppConstants.KEY_URL, news.getmUrl());
                 values.put(AppConstants.KEY_PUBLISHED_AT, news.getmPublishedAt());
-                values.put(AppConstants.KEY_IMAGE_URL, news.getmImageUrl());
                 db.insert(AppConstants.TABLE_STARRED_NEWS, null, values);
-                new DownloadImage().execute(new Base(news.getmUrl(), news.getmImageUrl()));
+                Toast.makeText(mContext, "News added", Toast.LENGTH_SHORT).show();
+                EventHelper.Invoke(news, true);
             }
             db.close();
         }
@@ -80,22 +89,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
         try{
             SQLiteDatabase db = this.getWritableDatabase();
-            ArrayList<News> x = getAllNews();
             cursor = db.query(AppConstants.TABLE_STARRED_NEWS,
-                    new String[] {AppConstants.KEY_ID, AppConstants.KEY_TITLE, AppConstants.KEY_DESCRIPTION, AppConstants.KEY_URL,
-                            AppConstants.KEY_PUBLISHED_AT, AppConstants.KEY_IMAGE_URL, AppConstants.KEY_IMAGE}, AppConstants.KEY_URL + "=?",
+                    new String[] {AppConstants.KEY_ID, AppConstants.KEY_AUTHOR,
+                            AppConstants.KEY_TITLE, AppConstants.KEY_DESCRIPTION, AppConstants.KEY_URL,
+                            AppConstants.KEY_PUBLISHED_AT,}, AppConstants.KEY_URL + "=?",
                     new String[] { String.valueOf(url.trim()) }, null, null, null, null);
 
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
-                news = new News(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
-                news.setmImageUrl(cursor.getString(5));
-                try{
-                    byte[] blob = cursor.getBlob(6);
-                    news.setmLocalImage(BitmapFactory.decodeByteArray(blob, 0,blob.length));
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                news = new News(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
             }
             if(cursor != null)
                 cursor.close();
@@ -117,14 +119,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             // looping through all rows and adding to list
             if (cursor.moveToFirst()) {
                 do {
-                    News news = new News(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
-                    news.setmImageUrl(cursor.getString(5));
-                    try{
-                        byte[] blob = cursor.getBlob(6);
-                        news.setmLocalImage(BitmapFactory.decodeByteArray(blob, 0,blob.length));
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+                    News news = new News(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
                     newsList.add(news);
                 } while (cursor.moveToNext());
             }
@@ -143,24 +138,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor != null && cursor.getCount() > 0;
     }
 
-
-
-    private boolean updateNews(Bitmap bitmap, String url) {
-        try{
-            SQLiteDatabase db = this.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            Bitmap p = bitmap;
-            ByteArrayOutputStream bAOS = new ByteArrayOutputStream();
-            p.compress(Bitmap.CompressFormat.PNG, 100, bAOS);
-            byte[] bArray = bAOS.toByteArray();
-            values.put(AppConstants.KEY_IMAGE, bArray);
-            db.update(AppConstants.TABLE_STARRED_NEWS, values, AppConstants.KEY_URL + " = ?", new String[] { String.valueOf(url) });
-            return true;
-        }catch(Exception ex){
-            return false;
-        }
-
-    }
 
     public void deleteNews(String url, boolean showResult) {
         try{
@@ -196,57 +173,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
     }
-
-    private class DownloadImage extends AsyncTask<Base, Void, Bitmap> {
-        String article;
-        @Override
-        protected Bitmap doInBackground(Base... params) {
-            Base base = params[0];
-            article = base.getmUrl();
-
-            Bitmap bitmap = null;
-            try {
-                InputStream iStream = new URL(base.getmImageUrl()).openStream();
-                bitmap = BitmapFactory.decodeStream(iStream);
-            }catch(Exception ex){
-                try{
-                    bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.drawer_back);
-                }catch (Exception e){
-
-                }
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressDialog = new ProgressDialog(mContext);
-            mProgressDialog.setMessage("Downloading image...");
-            mProgressDialog.setIndeterminate(false);
-            mProgressDialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            mProgressDialog.dismiss();
-            if(saveBitmap(bitmap,  article)){
-                Toast.makeText(mContext, "News added.", Toast.LENGTH_SHORT).show();
-                EventHelper.Invoke(getNews(article), true);
-            }
-        }
-    }
-
-
-    private boolean saveBitmap(Bitmap bitmap, String url) {
-        if(bitmap != null){
-            return updateNews(bitmap, url);
-        }else {
-            CollectionHelper.showAlert(mContext, "Couldn't Complete, Try again", "Something went wrong at our end. Please try in a little bit.");
-            deleteNews(url, false);
-            return false;
-        }
-    }
-
 }

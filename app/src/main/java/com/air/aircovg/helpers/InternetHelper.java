@@ -10,21 +10,46 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.StreamCorruptedException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Created by ayush AS on 27/12/16.
  */
 
 public class InternetHelper {
-    public String getJsonString(String item, String sortBy) throws IOException {
+    public String getJsonString(String url, int pageNumber, String searchString, String selectedCountry, String languageName) throws IOException {
         String jsonString;
 
-        URL _obj = new URL(StringHelpers.getFullNewsUrl(item, sortBy));
+        String data = URLEncoder.encode("page_number", "UTF-8")
+                + "=" + URLEncoder.encode(String.valueOf(pageNumber), "UTF-8");
+
+        data += "&" + URLEncoder.encode("search_string", "UTF-8") + "="
+                + URLEncoder.encode(searchString, "UTF-8");
+
+        data += "&" + URLEncoder.encode("selected_country", "UTF-8")
+                + "=" + URLEncoder.encode(selectedCountry, "UTF-8");
+
+        data += "&" + URLEncoder.encode("language_name", "UTF-8")
+                + "=" + URLEncoder.encode(languageName, "UTF-8");
+
+        URL _obj = new URL(url);
         HttpURLConnection _connection = (HttpURLConnection) _obj.openConnection();
-        _connection.connect();
+        _connection.setReadTimeout(15000);
+        _connection.setConnectTimeout(15000);
+        _connection.setRequestMethod("POST");
+        _connection.setDoInput(true);
+        _connection.setDoOutput(true);
+
+        OutputStreamWriter wr = new OutputStreamWriter(_connection.getOutputStream());
+        wr.write(data);
+        wr.flush();
+
+        //_connection.connect();
         BufferedReader _reader = new BufferedReader(new InputStreamReader(_connection.getInputStream()));
 
         String result;
@@ -38,26 +63,5 @@ public class InternetHelper {
         _reader.close();
 
         return jsonString;
-    }
-
-    public XmlPullParser getXml(String query) {
-        try {
-            URL url = new URL(query);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            //conn.setReadTimeout(10000 /* milliseconds */);
-            //conn.setConnectTimeout(15000 /* milliseconds */);
-            //conn.setRequestMethod("GET");
-            //conn.setDoInput(true);
-            conn.connect();
-            InputStream stream = conn.getInputStream();
-
-            XmlPullParser myParser = Xml.newPullParser();
-            myParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            myParser.setInput(stream, null);
-            myParser.nextTag();
-            return myParser;
-        } catch (Exception e) {
-            return null;
-        }
     }
 }

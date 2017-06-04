@@ -28,6 +28,13 @@
         android:layout_height="match_parent"
         android:layout_marginTop="55dp">
 
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:theme="@style/LinearProgressBar"/>
+
         <TextView
             android:id="@+id/emptyMessage"
             style="@style/MessageTextView"
@@ -36,6 +43,8 @@
             android:layout_marginTop="7dp"
             android:text="@string/all_news_empty"
             android:visibility="gone" />
+
+
 
         <WebView
             android:id="@+id/webview"
@@ -46,12 +55,5 @@
 
     </RelativeLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="55dp"
-        />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -25,7 +25,7 @@
             android:minHeight="120dp"
             android:minWidth="120dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/app_icon_big" />
+            android:src="@drawable/app_icon" />
 
     </LinearLayout>
 

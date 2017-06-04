@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <TextView
         android:id="@+id/emptyMessage"
         android:layout_width="wrap_content"
@@ -15,22 +16,19 @@
         android:text="@string/all_news_empty"
         style="@style/MessageTextView"/>
 
-    <Button
-        android:id="@+id/refreshNow"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:text="@string/refresh_now"
-        android:textColor="@android:color/white"
-        android:background="@drawable/round_button"
-        android:layout_centerInParent="true"
-        android:visibility="gone"/>
-
-    <ListView
-        android:id="@+id/listView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:dividerHeight="0dp"
-        android:scrollbars="none" />
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="0dp"
+            android:scrollbars="none" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
 </RelativeLayout>

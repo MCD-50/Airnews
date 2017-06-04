@@ -31,7 +31,6 @@ import com.air.aircovg.model.News;
 public class DetailedNewsActivity extends AppCompatActivity implements WebClient.ProgressListener {
 
     News mNews;
-
     ProgressDialog progressDialog;
     ProgressBar mProgressBar;
 
@@ -40,8 +39,6 @@ public class DetailedNewsActivity extends AppCompatActivity implements WebClient
 
     Menu mMenu;
     MenuItem mMenuItem;
-
-
     WebView mWebView;
     TextView mTextView;
 
@@ -63,14 +60,11 @@ public class DetailedNewsActivity extends AppCompatActivity implements WebClient
         webSettings.setJavaScriptEnabled(true);
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         mWebView.clearHistory();
-        databaseHelper = new DatabaseHelper(this);
+        databaseHelper = DatabaseHelper.getDatabaseHelper(DetailedNewsActivity.this);
 
         networkStatusHelper = new NetworkStatusHelper(DetailedNewsActivity.this);
         mNews = (News)getIntent().getSerializableExtra("newsObject");
-
-        setTitle(mNews.getmTitle().substring(0, 1).toUpperCase() + mNews.getmTitle().substring(1));
-
-
+        setTitle(mNews.getmTitle());
         mWebView.setWebChromeClient(new WebClient(this));
     }
 
@@ -81,7 +75,8 @@ public class DetailedNewsActivity extends AppCompatActivity implements WebClient
             mMenuItem.setVisible(true);
             mTextView.setVisibility(View.GONE);
 
-            if(databaseHelper.isNewsExists(mNews.getmUrl())){
+            String url = mNews.getmUrl();
+            if(databaseHelper.isNewsExists(url)){
                 mMenuItem.setIcon(R.drawable.ic_starred);
             }else {
                 mMenuItem.setIcon(R.drawable.ic_not_starred);
@@ -97,18 +92,15 @@ public class DetailedNewsActivity extends AppCompatActivity implements WebClient
                 @Override
                 public void onPageStarted(WebView view, String url, Bitmap favicon) {
                     super.onPageStarted(view, url, favicon);
-                    mProgressBar.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
-                    mProgressBar.setVisibility(View.GONE);
                 }
             });
             mWebView.loadUrl(mNews.getmUrl());
         }else {
-
             mMenuItem.setVisible(false);
             mTextView.setVisibility(View.VISIBLE);
         }
@@ -154,8 +146,5 @@ public class DetailedNewsActivity extends AppCompatActivity implements WebClient
     @Override
     public void onUpdateProgress(int progressValue) {
         mProgressBar.setProgress(progressValue);
-        if (progressValue >= 90) {
-            mProgressBar.setVisibility(View.GONE);
-        }
     }
 }

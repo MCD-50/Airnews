@@ -60,8 +60,7 @@ public class StarredFragment extends Fragment implements DatabaseEvents {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         loadAdapter();
-        databaseHelper = new DatabaseHelper(getContext());
-
+        databaseHelper = DatabaseHelper.getDatabaseHelper(getContext());
         for(News n : databaseHelper.getAllNews()){
             mNews.add(n);
         }
@@ -72,6 +71,7 @@ public class StarredFragment extends Fragment implements DatabaseEvents {
             }
         });
     }
+
 
     @Override
     public void addOrRemoveNews(News news, boolean isAdded) {

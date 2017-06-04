@@ -10,10 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.air.aircovg.R;
-import com.air.aircovg.model.Base;
-import com.air.aircovg.model.Country;
-import com.air.aircovg.model.News;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -24,9 +20,9 @@ import java.util.ArrayList;
 public class SpinnerAdapter extends BaseAdapter {
 
     private Context mContext;
-    private ArrayList<Country> mBase;
+    private ArrayList<String> mBase;
 
-    public SpinnerAdapter(Context context, ArrayList<Country> base){
+    public SpinnerAdapter(Context context, ArrayList<String> base){
         mContext = context;
         mBase = base;
     }
@@ -36,7 +32,7 @@ public class SpinnerAdapter extends BaseAdapter {
     }
 
     @Override
-    public Country getItem(int position) {
+    public String getItem(int position) {
         return mBase.get(position);
     }
 
@@ -56,9 +52,8 @@ public class SpinnerAdapter extends BaseAdapter {
             rowView.setTag(viewHolder);
         }
 
-        Country country = getItem(position);
         SpinnerAdapter.ViewHolder viewHolder = (SpinnerAdapter.ViewHolder) rowView.getTag();
-        viewHolder.title.setText(country.getmTitle());
+        viewHolder.title.setText(getItem(position));
         return rowView;
     }
 

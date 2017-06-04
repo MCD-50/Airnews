@@ -7,7 +7,6 @@
     android:orientation="vertical">
 
 
-
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,18 +25,37 @@
                 android:id="@+id/news_content_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minLines="1"
-                android:maxLines="3"
+                android:layout_marginBottom="@dimen/five_dp_margin"
                 style="@style/TitleTextView"/>
 
-            <ImageView
-                android:id="@+id/news_content_image"
-                android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:layout_marginTop="@dimen/five_dp_margin"
-                android:layout_marginBottom="@dimen/five_dp_margin"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/five_dp_margin">
+
+                <TextView
+                    android:id="@+id/news_content_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/DateTextView"
+                    android:layout_marginEnd="@dimen/five_dp_margin"/>
+
+                <View
+                    android:layout_width="@dimen/five_dp_margin"
+                    android:layout_height="1dp"
+                    android:alpha=".7"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/five_dp_margin"
+                    android:background="@android:color/black"/>
+
+                <TextView
+                    android:id="@+id/news_content_published_at"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/DateTextView"/>
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/news_content_description"
@@ -46,11 +64,6 @@
                 android:layout_marginBottom="@dimen/five_dp_margin"
                 style="@style/DescriptionTextView"/>
 
-            <TextView
-                android:id="@+id/news_content_published_at"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/DateTextView"/>
 
         </LinearLayout>
 

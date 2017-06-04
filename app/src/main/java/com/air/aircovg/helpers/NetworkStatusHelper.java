@@ -9,7 +9,7 @@ import android.net.NetworkInfo;
  */
 
 public class NetworkStatusHelper {
-    Context mContext;
+    private Context mContext;
     public NetworkStatusHelper(Context context){
         mContext = context;
     }

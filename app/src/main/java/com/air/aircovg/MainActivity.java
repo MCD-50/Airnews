@@ -14,16 +14,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.air.aircovg.helpers.NetworkStatusHelper;
 import com.astuetz.PagerSlidingTabStrip;
 import com.air.aircovg.adapters.TabsPagerAdapter;
 import com.air.aircovg.model.News;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-
-
 
     //versionName = getBaseContext().getPackageManager().getPackageInfo(getBaseContext().getPackageName(), 0 ).versionName;
     //versionCode = getBaseContext().getPackageManager().getPackageInfo(getBaseContext().getPackageName(), 0 ).versionCode;
@@ -34,6 +33,8 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
     FloatingActionButton fab;
     CoordinatorLayout coordinatorLayout;
+    NetworkStatusHelper networkStatusHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,12 +56,16 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        networkStatusHelper = new NetworkStatusHelper(MainActivity.this);
+
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         viewPager = (ViewPager) findViewById(R.id.activity_main_pager);
         tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tabsPagerAdapter);
+
+
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cordinateLayout);
 
@@ -70,15 +75,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showNews(News news, boolean isStarred) {
-        Intent i = new Intent(MainActivity.this, DetailedNewsActivity.class);
-        if(isStarred){
-            News s = new News(news.getmTitle(), news.getmDescription(), news.getmUrl(), news.getmPublishedAt());
-            s.setmImageUrl(news.getmImageUrl());
-            i.putExtra("newsObject", s);
-        }else {
-            i.putExtra("newsObject", news);
+        if(networkStatusHelper.isNetworkAvailable()){
+            Intent i = new Intent(MainActivity.this, DetailedNewsActivity.class);
+            if(isStarred){
+                News s = new News(news.getmAuthor(), news.getmTitle(), news.getmDescription(), news.getmUrl(), news.getmPublishedAt());
+                i.putExtra("newsObject", s);
+            }else {
+                i.putExtra("newsObject", news);
+            }
+            startActivity(i);
+        }else{
+            Toast.makeText(this, "No active internet.", Toast.LENGTH_SHORT).show();
         }
-        startActivity(i);
     }
 
     @Override
@@ -91,11 +99,11 @@ public class MainActivity extends AppCompatActivity
         try {
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
-            i.putExtra(Intent.EXTRA_SUBJECT, "Airverge");
-            String sAux = "Discover Airverge for android.\n\n";
+            i.putExtra(Intent.EXTRA_SUBJECT, "Airnews");
+            String sAux = "Discover Airnews for android.\n\n";
             sAux = sAux + "https://play.google.com/store/apps/details?id=com.air.aircovg&hl=en\n\n";
             sAux = sAux + "Source code at Github\n\n";
-            sAux = sAux + "https://www.github.com/mcd-50";
+            sAux = sAux + "https://www.github.com/mcd-50/airnews";
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             startActivity(Intent.createChooser(i, "Choose to share"));
         } catch(Exception e) {
@@ -132,5 +140,4 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 }

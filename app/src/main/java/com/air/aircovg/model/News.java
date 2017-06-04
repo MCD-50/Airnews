@@ -11,20 +11,22 @@ import java.io.Serializable;
 
 public class News implements Serializable {
 
-
-
+    private String mAuthor;
     private String mTitle;
     private String mUrl;
     private String mPublishedAt;
     private String mDescription;
-    private String mImageUrl;
-    private Bitmap mImage;
 
-    public News(String mTitle, String mDescription, String mUrl, String mPublishedAt) {
+    public News(String mAuthor, String mTitle, String mDescription, String mUrl, String mPublishedAt) {
+        this.mAuthor = mAuthor;
         this.mTitle = mTitle;
         this.mDescription = mDescription;
         this.mUrl = mUrl;
         this.mPublishedAt = mPublishedAt;
+    }
+
+    public String getmAuthor() {
+        return mAuthor;
     }
 
     public String getmTitle() {
@@ -35,54 +37,31 @@ public class News implements Serializable {
         return mDescription;
     }
 
-    public void setmDescription(String mDescription) {
-        this.mDescription = mDescription;
-    }
-
-    public Bitmap getmImage() {
-        return mImage;
-    }
-
-    public void setmImage(Bitmap mImage) {
-        this.mImage = mImage;
-    }
-
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
+    public String getmPublishedAt() {
+        return mPublishedAt;
     }
 
     public String getmUrl() {
         return mUrl;
     }
 
-    public void setmUrl(String mUrl) {
-        this.mUrl = mUrl;
+    public void setmDescription(String mDescription) {
+        this.mDescription = mDescription;
     }
 
-    public String getmPublishedAt() {
-        return mPublishedAt;
+    public void setmTitle(String mTitle) {
+        this.mTitle = mTitle;
+    }
+
+    public void setmUrl(String mUrl) {
+        this.mUrl = mUrl;
     }
 
     public void setmPublishedAt(String mPublishedAt) {
         this.mPublishedAt = mPublishedAt;
     }
 
-
-    public String getmImageUrl() {
-        return mImageUrl;
+    public void setmAuthor(String mAuthor) {
+        this.mAuthor = mAuthor;
     }
-
-    public void setmImageUrl(String mImageUrl) {
-        this.mImageUrl = mImageUrl;
-    }
-
-
-    public Bitmap getmLocalImage() {
-        return mImage;
-    }
-
-    public void setmLocalImage(Bitmap mLocalImage) {
-        this.mImage = mLocalImage;
-    }
-
 }

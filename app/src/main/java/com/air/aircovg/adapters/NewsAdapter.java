@@ -53,29 +53,23 @@ public class NewsAdapter extends BaseAdapter {
         if(rowView == null){
             rowView = LayoutInflater.from(mContext).inflate(R.layout.news_content_layout, null);
             ViewHolder viewHolder = new ViewHolder();
+            viewHolder.author= (TextView) rowView.findViewById(R.id.news_content_author);
             viewHolder.title= (TextView) rowView.findViewById(R.id.news_content_title);
-            viewHolder.publishedAt= (TextView) rowView.findViewById(R.id.news_content_published_at);
             viewHolder.description= (TextView) rowView.findViewById(R.id.news_content_description);
-            viewHolder.image= (ImageView) rowView.findViewById(R.id.news_content_image);
+            viewHolder.publishedAt= (TextView) rowView.findViewById(R.id.news_content_published_at);
             rowView.setTag(viewHolder);
         }
 
         News news = getItem(position);
         ViewHolder viewHolder = (ViewHolder) rowView.getTag();
+        viewHolder.author.setText(news.getmAuthor());
         viewHolder.title.setText(news.getmTitle());
         viewHolder.publishedAt.setText(news.getmPublishedAt());
         viewHolder.description.setText(news.getmDescription());
-        Bitmap b = news.getmLocalImage();
-        if(mStarred && b != null){
-            viewHolder.image.setImageBitmap(b);
-        }else{
-            Picasso.with(mContext).load(news.getmImageUrl()).placeholder(R.drawable.back_big).into(viewHolder.image);
-        }
         return rowView;
     }
 
     private static class ViewHolder{
-        TextView title, publishedAt, description;
-        ImageView image;
+        TextView author, title, publishedAt, description;
     }
 }

@@ -9,7 +9,6 @@ import android.webkit.WebView;
 
 public class WebClient extends WebChromeClient {
     private ProgressListener mListener;
-
     public WebClient(ProgressListener listener) {
         mListener = listener;
     }

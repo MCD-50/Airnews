@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,10 +17,6 @@ import android.widget.TextView;
 import com.air.aircovg.adapters.SpinnerAdapter;
 import com.air.aircovg.helpers.AppConstants;
 import com.air.aircovg.helpers.SharedPreferenceHelper;
-import com.air.aircovg.helpers.StringHelpers;
-import com.air.aircovg.model.Country;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -30,12 +27,10 @@ import java.util.ArrayList;
 public class SettingsActivity extends AppCompatActivity {
 
     SharedPreferenceHelper sharedPreferenceHelper;
-    SpinnerAdapter spinnerAdapter;
-
     TextView mContact, mGithub, mPaypal;
-    Spinner mSpinner;
+    Spinner mLanguageSpinner, mCountrySpinner;
 
-    ArrayList<String> countryName = new ArrayList<>();
+    SpinnerAdapter countryAdapter, languageAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,22 +42,26 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sharedPreferenceHelper = new SharedPreferenceHelper(getApplicationContext());
-        spinnerAdapter = new SpinnerAdapter(this, AppConstants.COUNTRY_LIST);
+
 
         mContact = (TextView) findViewById(R.id.mailLink);
         mGithub = (TextView) findViewById(R.id.githubLink);
         mPaypal = (TextView) findViewById(R.id.coffeeLink);
-        mSpinner = (Spinner) findViewById(R.id.spinnerViews);
+        mLanguageSpinner = (Spinner) findViewById(R.id.languageSpinner);
+        mCountrySpinner = (Spinner) findViewById(R.id.countrySpinner);
 
-        mSpinner.setAdapter(spinnerAdapter);
-        mSpinner.setSelection(getIndex(sharedPreferenceHelper.getData("ned")));
+        countryAdapter = new SpinnerAdapter(this, AppConstants.COUNTRY_LIST);
+        languageAdapter = new SpinnerAdapter(this, AppConstants.LANGUAGE_LIST);
 
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        mLanguageSpinner.setAdapter(languageAdapter);
+        mLanguageSpinner.setSelection(getIndex(sharedPreferenceHelper.getData(AppConstants.TAG_LANGUAGE, "english"), false));
+        mLanguageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Country country = (Country) parent.getItemAtPosition(position);
-                sharedPreferenceHelper.saveData("ned", country.getmCode());
-                mSpinner.setSelection(position);
+                String country = (String) parent.getItemAtPosition(position);
+                sharedPreferenceHelper.saveData(AppConstants.TAG_LANGUAGE, country);
+                mLanguageSpinner.setSelection(position);
             }
 
             @Override
@@ -70,6 +69,25 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+        mCountrySpinner.setAdapter(countryAdapter);
+        mCountrySpinner.setSelection(getIndex(sharedPreferenceHelper.getData(AppConstants.TAG_COUNTRY, "india"), true));
+        mCountrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String country = (String) parent.getItemAtPosition(position);
+                sharedPreferenceHelper.saveData(AppConstants.TAG_COUNTRY, country);
+                mCountrySpinner.setSelection(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         mContact.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +106,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent bIntent = new Intent(Intent.ACTION_VIEW);
-                bIntent.setData(Uri.parse("https://www.github.com/MCD-50/Airverge"));
+                bIntent.setData(Uri.parse("https://www.github.com/MCD-50/Airnews"));
                 startActivity(bIntent);
             }
         });
@@ -116,12 +134,13 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-    private int getIndex(String code){
-        ArrayList<Country> countries = AppConstants.COUNTRY_LIST;
-        for(int i = 0; i < countries.size(); i++){
-            Country country = countries.get(i);
-            if(country.getmCode().equalsIgnoreCase(code))
+    public int getIndex(String value, boolean isCountry){
+        ArrayList<String> _list = isCountry ? AppConstants.COUNTRY_LIST : AppConstants.LANGUAGE_LIST;
+
+        for (int i = 0; i<_list.size(); i++){
+            if(_list.get(i).equalsIgnoreCase(value)){
                 return i;
+            }
         }
         return 0;
     }

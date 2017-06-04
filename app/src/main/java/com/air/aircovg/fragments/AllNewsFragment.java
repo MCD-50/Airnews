@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +17,15 @@ import android.widget.TextView;
 import com.air.aircovg.MainActivity;
 import com.air.aircovg.R;
 import com.air.aircovg.adapters.NewsAdapter;
-import com.air.aircovg.helpers.RssHelper;
+import com.air.aircovg.helpers.AppConstants;
+import com.air.aircovg.helpers.CollectionHelper;
 import com.air.aircovg.helpers.InternetHelper;
 import com.air.aircovg.helpers.NetworkStatusHelper;
 import com.air.aircovg.helpers.SharedPreferenceHelper;
-import com.air.aircovg.helpers.StringHelpers;
 import com.air.aircovg.model.News;
-import com.air.aircovg.model.XmlObject;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * Created by ayush AS on 25/12/16.
@@ -39,15 +40,16 @@ public class AllNewsFragment extends Fragment {
     NewsAdapter newsAdapter;
     ArrayList<News> mNews;
 
-    RssHelper rssHelper;
+    CollectionHelper collectionHelper;
 
     ProgressDialog mProgressDialog;
 
-    Button mButton;
+
     TextView mTextView;
     ListView mListView;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
-    int currentPage = 0;
+    int nextPage = 1;
 
 
     @Override
@@ -56,12 +58,13 @@ public class AllNewsFragment extends Fragment {
 
         networkStatusHelper = new NetworkStatusHelper(getContext());
         internetHelper = new InternetHelper();
-        rssHelper = new RssHelper();
+        sharedPreferenceHelper = new SharedPreferenceHelper(getActivity().getApplicationContext());
         mProgressDialog = new ProgressDialog(getContext());
-
+        collectionHelper = new CollectionHelper();
         mTextView = (TextView) rootView.findViewById(R.id.emptyMessage);
-        mButton = (Button) rootView.findViewById(R.id.refreshNow);
+
         mListView = (ListView) rootView.findViewById(R.id.listView);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh_layout);
         mListView.setDividerHeight(0);
         return rootView;
     }
@@ -73,9 +76,8 @@ public class AllNewsFragment extends Fragment {
         mListView.setAdapter(newsAdapter);
     }
 
-    private void loadData(int count) {
-        //we are not using paging
-        new getNewsAsync().execute();
+    private void loadData(int nextPage, boolean showDialog) {
+        new getNewsAsync(nextPage, showDialog).execute();
     }
 
 
@@ -84,63 +86,87 @@ public class AllNewsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         sharedPreferenceHelper = new SharedPreferenceHelper(getActivity().getApplicationContext());
         setAdapter();
-
         if(networkStatusHelper.isNetworkAvailable()){
-            onNetworkAvailable();
+            onNetworkAvailable(nextPage, true);
         }else {
             mTextView.setVisibility(View.VISIBLE);
-            mButton.setVisibility(View.VISIBLE);
         }
 
-        mButton.setOnClickListener(new View.OnClickListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
-                onRefreshClick();
+            public void onRefresh() {
+                if(networkStatusHelper.isNetworkAvailable()){
+                    onNetworkAvailable(1, false);
+                }else {
+                    mTextView.setVisibility(View.VISIBLE);
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }
 
-
-    private void onRefreshClick(){
-        if(networkStatusHelper.isNetworkAvailable()){
-            onNetworkAvailable();
-        }else {
-            mTextView.setVisibility(View.VISIBLE);
-            mButton.setVisibility(View.VISIBLE);
-        }
-    }
-
-
-    private void onNetworkAvailable(){
-        loadData(currentPage);
+    private void onNetworkAvailable(int page,boolean showDialog){
+        loadData(page, showDialog);
         mTextView.setVisibility(View.GONE);
-        mButton.setVisibility(View.GONE);
-        loadData(0);
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ((MainActivity)getActivity()).showNews(newsAdapter.getItem(position), false);
             }
         });
+
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                int threshold = 1;
+                int itemCount = mListView.getCount();
+                if (scrollState == SCROLL_STATE_IDLE) {
+                    if (mListView.getLastVisiblePosition() >= itemCount - threshold && itemCount < 100) {
+                        // Execute LoadMoreDataTask AsyncTask
+                        loadData(nextPage, true);
+                    }
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
     }
 
     public class getNewsAsync extends AsyncTask<Void, Void, ArrayList<News>> {
 
+        int mNextPage;
+        boolean mShowDialog;
+        public getNewsAsync(int nextPage, boolean showDialog){
+            mNextPage = nextPage;
+            mShowDialog = showDialog;
+        }
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mProgressDialog.setMessage("Please wait...");
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.show();
+            if(mShowDialog){
+                mProgressDialog.setMessage("Please wait...");
+                mProgressDialog.setCancelable(false);
+                mProgressDialog.show();
+            }else {
+                mNews.clear();
+            }
         }
 
         @Override
         protected ArrayList<News> doInBackground(Void... params) {
             ArrayList<News> newsList= new ArrayList<>();
             try{
-                String ned = sharedPreferenceHelper.getData("ned");
-                String q = StringHelpers.getFullNewsUrl(ned, "education");
-                newsList = rssHelper.fetchXML(q);
+                String selectedCountry = sharedPreferenceHelper.getData(AppConstants.TAG_COUNTRY, "india");
+                String selectedLanguage = sharedPreferenceHelper.getData(AppConstants.TAG_LANGUAGE, "english");
+
+                String jsonString = internetHelper.getJsonString(AppConstants.BASE, mNextPage, selectedCountry, selectedCountry, selectedLanguage);
+                newsList = collectionHelper.getNewsListFromJsonString(jsonString);
+
+                nextPage += 1;
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -149,14 +175,13 @@ public class AllNewsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<News> newsArrayList) {
-            mProgressDialog.dismiss();
+            if(mShowDialog) mProgressDialog.dismiss();
+
             if (newsArrayList.size() > 0) {
-                for(News x : newsArrayList)
-                    mNews.add(x);
-                //currentPage += 2;
+                for(News x : newsArrayList) mNews.add(x);
+                mSwipeRefreshLayout.setRefreshing(false);
                 newsAdapter.notifyDataSetChanged();
             }
-
         }
     }
 

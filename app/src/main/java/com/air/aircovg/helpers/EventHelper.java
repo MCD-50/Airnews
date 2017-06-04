@@ -9,6 +9,7 @@ import com.air.aircovg.model.News;
 
 public class EventHelper {
     private static DatabaseEvents mDatabaseEvent;
+
     public static void initDatabaseEvent(DatabaseEvents databaseEvent){
         mDatabaseEvent = databaseEvent;
     }

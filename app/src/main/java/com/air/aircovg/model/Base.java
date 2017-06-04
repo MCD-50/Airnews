@@ -13,7 +13,6 @@ public class Base {
         this.mImageUrl = mImageUrl;
     }
 
-
     public String getmUrl() {
         return mUrl;
     }

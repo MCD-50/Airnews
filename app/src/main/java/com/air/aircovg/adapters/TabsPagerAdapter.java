@@ -12,7 +12,6 @@ import com.air.aircovg.fragments.StarredFragment;
  */
 
 public class TabsPagerAdapter extends FragmentPagerAdapter {
-
     private String[] tabs = { "ALL NEWS", "PINNED" };
     public TabsPagerAdapter(FragmentManager fm) {
         super(fm);
