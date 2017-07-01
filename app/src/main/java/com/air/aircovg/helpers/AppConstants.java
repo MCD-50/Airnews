@@ -26,6 +26,8 @@ public class AppConstants {
     public static final String TAG_COUNTRY = "country";
     public static final String TAG_LANGUAGE = "language";
 
+    public static final int DATA_CHANGE_RESULT_CODE = 209;
+
 
     public static ArrayList<String> COUNTRY_LIST = new ArrayList<String>(){{
         add("World");

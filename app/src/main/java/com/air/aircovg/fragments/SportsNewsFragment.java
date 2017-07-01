@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,13 +24,12 @@ import com.air.aircovg.helpers.SharedPreferenceHelper;
 import com.air.aircovg.model.News;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 /**
- * Created by ayush AS on 25/12/16.
+ * Created by mcd-50 on 29/6/17.
  */
 
-public class AllNewsFragment extends Fragment {
+public class SportsNewsFragment extends Fragment {
 
     NetworkStatusHelper networkStatusHelper;
     InternetHelper internetHelper;
@@ -54,7 +52,7 @@ public class AllNewsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.all_news_layout, container, false);
+        View rootView = inflater.inflate(R.layout.news_layout, container, false);
 
         networkStatusHelper = new NetworkStatusHelper(getContext());
         internetHelper = new InternetHelper();
@@ -86,24 +84,40 @@ public class AllNewsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         sharedPreferenceHelper = new SharedPreferenceHelper(getActivity().getApplicationContext());
         setAdapter();
-        if(networkStatusHelper.isNetworkAvailable()){
-            onNetworkAvailable(nextPage, true);
-        }else {
-            mTextView.setVisibility(View.VISIBLE);
-        }
-
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(networkStatusHelper.isNetworkAvailable()){
+                if (networkStatusHelper.isNetworkAvailable()) {
                     onNetworkAvailable(1, false);
-                }else {
+                } else {
                     mTextView.setVisibility(View.VISIBLE);
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
     }
+
+
+    public boolean hasLoaded = false;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(this.isVisible()){
+            if(isVisibleToUser && !hasLoaded){
+                checkAndLoad();
+            }
+            hasLoaded = true;
+        }
+    }
+
+    public void checkAndLoad(){
+        if (networkStatusHelper.isNetworkAvailable()) {
+            onNetworkAvailable(nextPage, true);
+        } else {
+            mTextView.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     private void onNetworkAvailable(int page,boolean showDialog){
         loadData(page, showDialog);
@@ -160,10 +174,9 @@ public class AllNewsFragment extends Fragment {
         protected ArrayList<News> doInBackground(Void... params) {
             ArrayList<News> newsList= new ArrayList<>();
             try{
-                String selectedCountry = sharedPreferenceHelper.getData(AppConstants.TAG_COUNTRY, "india");
                 String selectedLanguage = sharedPreferenceHelper.getData(AppConstants.TAG_LANGUAGE, "english");
 
-                String jsonString = internetHelper.getJsonString(AppConstants.BASE, mNextPage, selectedCountry, selectedCountry, selectedLanguage);
+                String jsonString = internetHelper.getJsonString(AppConstants.BASE, mNextPage, "sports", selectedLanguage);
                 newsList = collectionHelper.getNewsListFromJsonString(jsonString);
 
                 nextPage += 1;
@@ -178,11 +191,16 @@ public class AllNewsFragment extends Fragment {
             if(mShowDialog) mProgressDialog.dismiss();
 
             if (newsArrayList.size() > 0) {
-                for(News x : newsArrayList) mNews.add(x);
+                for(News x : newsArrayList){
+                    mNews.add(x);
+                }
                 mSwipeRefreshLayout.setRefreshing(false);
                 newsAdapter.notifyDataSetChanged();
+            }else {
+                mTextView.setVisibility(View.VISIBLE);
             }
         }
     }
 
 }
+

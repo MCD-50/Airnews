@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Airnews.iml" filepath="$PROJECT_DIR$/Airnews.iml" />
       <module fileurl="file://$PROJECT_DIR$/Airverge.iml" filepath="$PROJECT_DIR$/Airverge.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

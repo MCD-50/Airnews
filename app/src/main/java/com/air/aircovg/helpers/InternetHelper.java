@@ -22,7 +22,7 @@ import java.net.URLEncoder;
  */
 
 public class InternetHelper {
-    public String getJsonString(String url, int pageNumber, String searchString, String selectedCountry, String languageName) throws IOException {
+    public String getJsonString(String url, int pageNumber, String searchString, String languageName) throws IOException {
         String jsonString;
 
         String data = URLEncoder.encode("page_number", "UTF-8")
@@ -31,8 +31,6 @@ public class InternetHelper {
         data += "&" + URLEncoder.encode("search_string", "UTF-8") + "="
                 + URLEncoder.encode(searchString, "UTF-8");
 
-        data += "&" + URLEncoder.encode("selected_country", "UTF-8")
-                + "=" + URLEncoder.encode(selectedCountry, "UTF-8");
 
         data += "&" + URLEncoder.encode("language_name", "UTF-8")
                 + "=" + URLEncoder.encode(languageName, "UTF-8");

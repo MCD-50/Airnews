@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * Created by ayush AS on 25/12/16.
  */
 
-public class StarredFragment extends Fragment implements DatabaseEvents {
+public class PinnedNewsFragment extends Fragment implements DatabaseEvents {
 
     NewsAdapter newsAdapter;
     ArrayList<News> mNews;
@@ -34,7 +34,7 @@ public class StarredFragment extends Fragment implements DatabaseEvents {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.starred_layout, container, false);
+        View rootView = inflater.inflate(R.layout.pinned_news_layout, container, false);
         EventHelper.initDatabaseEvent(this);
         mListView = (ListView) rootView.findViewById(R.id.listView);
         mTextView = (TextView) rootView.findViewById(R.id.emptyMessage);
@@ -59,8 +59,8 @@ public class StarredFragment extends Fragment implements DatabaseEvents {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadAdapter();
         databaseHelper = DatabaseHelper.getDatabaseHelper(getContext());
+        loadAdapter();
         for(News n : databaseHelper.getAllNews()){
             mNews.add(n);
         }

@@ -21,6 +21,9 @@
     <string name="select_language">Select Language</string>
     <string name="star_this_news">Star this news</string>
     <string name="its_empty_in_here_star_few_news_to_get_started">Its empty in here, star a few news to get started.</string>
+    <string name="share_this_app">Share this app</string>
+    <string name="change_country">Change country</string>
+    <string name="change_language">Change language</string>
 
     <!--<string-array name="randomList">-->
         <!--<item>Top</item>-->
